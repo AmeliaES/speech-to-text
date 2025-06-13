@@ -32,9 +32,9 @@
             Click on the "Record" button to record your voice. Click "Stop" when
             you have finished recording.
           </p>
-          <button id="record" class="btn btn-primary">Record</button>
+          <button id="record" class="btn">Record</button>
 
-          <button id="stop" class="btn btn-info" disabled>Stop</button>
+          <button id="stop" class="btn" disabled>Stop</button>
         </div>
       </div>
       <div class="row pb-4">
@@ -48,9 +48,7 @@
           <p>
             Click on the "Transcribe" button to convert your speech to text!
           </p>
-          <button id="transcribe" class="btn btn-warning" disabled>
-            Transcribe
-          </button>
+          <button id="transcribe" class="btn" disabled>Transcribe</button>
         </div>
       </div>
       <div class="row pb-4">
@@ -65,5 +63,33 @@
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function updateButtonClass(button) {
+        if (button.disabled) {
+          button.classList.remove('btn-primary');
+          button.classList.add('btn-warning');
+        } else {
+          button.classList.remove('btn-warning');
+          button.classList.add('btn-primary');
+        }
+      }
+
+      // Initial update on all buttons
+      document.querySelectorAll('button.btn').forEach(updateButtonClass);
+
+      // Observe changes to 'disabled' attribute on all buttons
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(({ target, attributeName }) => {
+          if (attributeName === 'disabled') {
+            updateButtonClass(target);
+          }
+        });
+      });
+
+      // Attach observer to all buttons
+      document.querySelectorAll('button.btn').forEach((button) => {
+        observer.observe(button, { attributes: true });
+      });
+    </script>
   </body>
 </html>
