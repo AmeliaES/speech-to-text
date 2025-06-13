@@ -117,10 +117,10 @@ const downloadAudio = () => {
   const text = document.getElementById('transcript').value;
   console.log('Transcript text:', JSON.stringify(text));
 
-  // if (!text) {
-  //   alert('No transcript available to download.');
-  //   return;
-  // }
+  if (!text) {
+    alert('No transcript available to download.');
+    return;
+  }
 
   // Create a Blob from the transcript text
   // this Blob will be used to create a downloadable file
