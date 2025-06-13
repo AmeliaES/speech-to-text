@@ -116,6 +116,10 @@ function transcribeAudio() {
 // --------------------------------------
 // When the record button is clicked, start recording audio
 recordBtn.onclick = async () => {
+  // Clear transcript box and disable the transcribe button
+  document.getElementById('transcript').innerText = '';
+  transcribeBtn.disabled = true;
+
   // Get the media stream from the user's microphone
   const stream = await getMediaStream();
 
