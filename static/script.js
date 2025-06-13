@@ -12,6 +12,7 @@ const stopBtn = document.getElementById('stop');
 const transcribeBtn = document.getElementById('transcribe');
 const audio = document.getElementById('audio');
 const transcriptBox = document.getElementById('transcript');
+const downloadBtn = document.getElementById('download');
 
 // Set the max size of the audio file to 10MB
 const maxSizeMB = 10;
@@ -111,6 +112,41 @@ function transcribeAudio() {
     });
 }
 
+// Function to download the audio file
+const downloadAudio = () => {
+  const text = document.getElementById('transcript').value;
+  console.log('Transcript text:', JSON.stringify(text));
+
+  // if (!text) {
+  //   alert('No transcript available to download.');
+  //   return;
+  // }
+
+  // Create a Blob from the transcript text
+  // this Blob will be used to create a downloadable file
+  // The Blob constructor takes an array of data and an options object
+  // The options object specifies the MIME type of the file
+  // In this case, we are creating a plain text file
+  // The text will be downloaded as a .txt file
+  const blob = new Blob([text], { type: 'text/plain' });
+
+  // Create a temporary anchor element and set its href to the Blob URL
+  const url = URL.createObjectURL(blob);
+
+  // add an anchor element to the document to trigger the download
+  // The anchor element is used to create a link that the user can click to download the file
+  // a bit like writing a tmp <a href="somefile.txt" download>Download</a>
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'transcript.txt'; // Set the file name
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
 // --------------------------------------
 // Set up event listeners for the buttons
 // --------------------------------------
@@ -119,6 +155,7 @@ recordBtn.onclick = async () => {
   // Clear transcript box and disable the transcribe button
   document.getElementById('transcript').innerText = '';
   transcribeBtn.disabled = true;
+  downloadBtn.disabled = true;
 
   // Get the media stream from the user's microphone
   const stream = await getMediaStream();
@@ -149,4 +186,10 @@ stopBtn.onclick = () => {
 
 transcribeBtn.onclick = async () => {
   transcribeAudio();
+  downloadBtn.disabled = false;
+  transcribeBtn.disabled = true;
+};
+
+downloadBtn.onclick = () => {
+  downloadAudio();
 };
