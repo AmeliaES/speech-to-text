@@ -14,7 +14,7 @@ model = None
 def get_model():
     global model
     if model is None:
-        model = whisper.load_model("base")
+        model = whisper.load_model("tiny")
     return model
 
 # Set up the main route 
