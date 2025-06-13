@@ -6,6 +6,8 @@ app = Flask(__name__)
 # Create an uploads directory if it doesn't exist
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Ensure the maximum file size is set (e.g., 10MB)
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB limit
 
 # Load the Whisper model
 model = whisper.load_model("base")
@@ -42,6 +44,14 @@ def transcribe():
 
     return jsonify({'text': text})
 
+# Set up the route for handling errors
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
+
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({'error': 'File too large. Max size is 10MB.'}), 413
 
 if __name__ == "__main__":
     app.run(debug=True)

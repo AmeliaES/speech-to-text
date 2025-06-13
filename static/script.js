@@ -13,6 +13,10 @@ const transcribeBtn = document.getElementById('transcribe');
 const audio = document.getElementById('audio');
 const transcriptBox = document.getElementById('transcript');
 
+// Set the max size of the audio file to 10MB
+const maxSizeMB = 10;
+const MAX_SIZE = maxSizeMB * 1024 * 1024; // 10 MB in bytes
+
 // --------------------------------------
 // Define helper functions
 // --------------------------------------
@@ -55,20 +59,7 @@ const blobToUrl = (blob) => {
   return URL.createObjectURL(blob);
 };
 
-// --------------------------------------
-// Set up event listeners for the buttons
-// --------------------------------------
-// When the record button is clicked, start recording audio
-recordBtn.onclick = async () => {
-  // Get the media stream from the user's microphone
-  const stream = await getMediaStream();
-
-  // Get media recorder from the stream
-  mediaRecorder = await getMediaRecorder(stream); // using the global mediaRecorder variable
-
-  // Get audio chunks from the media recorder
-  audioChunks = getAudioChunks(audioChunks);
-
+const stopMediaRecorder = (audioChunks) => {
   // Using the onstop event to handle the end of recording
   // When the recording stops, create a Blob from the audioChunks array
   // and set the audio source to the Blob URL
@@ -80,20 +71,21 @@ recordBtn.onclick = async () => {
     // This allows the audio to be played back without needing to upload it to a server
     // This is a temporary URL that can be used to play the audio
     audio.src = URL.createObjectURL(audioBlob);
-    transcribeBtn.disabled = false;
+
+    // If the audio file size exceeds the maximum size, alert the user
+    if (audioBlob.size > MAX_SIZE) {
+      alert(
+        `The recorded audio file exceeds the maximum size of ${maxSizeMB}MB. Please try recording again.`
+      );
+      return;
+    } else {
+      transcribeBtn.disabled = false;
+    }
   };
-
-  mediaRecorder.start();
-  recordBtn.disabled = true;
-  stopBtn.disabled = false;
 };
 
-stopBtn.onclick = () => {
-  mediaRecorder.stop();
-  recordBtn.disabled = false;
-  stopBtn.disabled = true;
-};
-
+// Send the recorded audio to the server for transcription
+// This function sends the audio Blob to the server using a POST request using a FormData object
 function transcribeAudio() {
   if (!audioBlob) return;
 
