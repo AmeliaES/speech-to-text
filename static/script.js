@@ -97,21 +97,59 @@ stopBtn.onclick = () => {
 function transcribeAudio() {
   if (!audioBlob) return;
 
+  // Set up a FormData object to send the audio Blob
   const formData = new FormData();
-  formData.append('audio', audioBlob, 'recording.webm');
+  formData.append('audio', audioBlob, 'recording.webm'); // append(name, value, filename)
 
+  // sends the audio Blob to the server using a POST request
   fetch('/transcribe', {
     method: 'POST',
     body: formData,
   })
+    // Take the server response (ie. the output from the fetch function) and convert it to JSON
     .then((res) => res.json())
+    // Update the transcript box with the transcribed text
     .then((data) => {
       document.getElementById('transcript').innerText = data.text;
     })
+    // Handle any errors that occur during the transcription process,
+    // eg. network issues or server errors or if the server result is not in the expected format
     .catch((err) => {
       console.error('Transcription error:', err);
     });
 }
+
+// --------------------------------------
+// Set up event listeners for the buttons
+// --------------------------------------
+// When the record button is clicked, start recording audio
+recordBtn.onclick = async () => {
+  // Get the media stream from the user's microphone
+  const stream = await getMediaStream();
+
+  // Get media recorder from the stream
+  mediaRecorder = await getMediaRecorder(stream); // using the global mediaRecorder variable
+
+  // Get audio chunks from the media recorder
+  audioChunks = getAudioChunks(audioChunks);
+
+  // Begin recording audio
+  mediaRecorder.start();
+  // Disable the record button and enable the stop button
+  recordBtn.disabled = true;
+  stopBtn.disabled = false;
+
+  // Define the onstop event to handle the end of recording
+  stopMediaRecorder(audioChunks);
+};
+
+// When the stop button is clicked, stop recording audio
+// and reset the buttons
+stopBtn.onclick = () => {
+  mediaRecorder.stop();
+  recordBtn.disabled = false;
+  stopBtn.disabled = true;
+};
 
 transcribeBtn.onclick = async () => {
   transcribeAudio();

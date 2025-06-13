@@ -1,18 +1,21 @@
 from flask import Flask, render_template, request, jsonify
 import whisper
 import os
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+# Create an uploads directory if it doesn't exist
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Load the Whisper model
 model = whisper.load_model("base")
 
+# Set up the main route 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# Set up the route for transcribing audio files
 @app.route('/transcribe', methods=['POST'])
 def transcribe():
     if 'audio' not in request.files:
@@ -22,10 +25,9 @@ def transcribe():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
-    # Save the file safely
+    # Save the file safely (this ensures malicious files are not executed)
     filename = 'recording.webm'
-    filepath = os.path.join('uploads', filename)
-    os.makedirs('uploads', exist_ok=True)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
 
     # Convert or decode file if needed before passing to Whisper
