@@ -1,8 +1,8 @@
 # Python Flask app converts speech to text using OpenAI Whisper 
 
-[<img width="1355" alt="Screenshot 2025-06-13 at 17 04 27" src="https://github.com/user-attachments/assets/52221c0a-e5a1-4605-af10-e0a9c3900623" />](https://speech-to-text-unut.onrender.com/)
+<img width="1355" alt="Screenshot 2025-06-13 at 17 04 27" src="https://github.com/user-attachments/assets/52221c0a-e5a1-4605-af10-e0a9c3900623" />
 
-[Live Demo](https://speech-to-text-unut.onrender.com/)
+
 
 ## Set up project
 
