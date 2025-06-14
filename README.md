@@ -1,6 +1,9 @@
-# Python Flask app converts speech to text using OpenAI Whisper
+# Speech-to-text App (Flask & OpenAI)
 
-<img width="1355" alt="Screenshot 2025-06-13 at 17 04 27" src="https://github.com/user-attachments/assets/52221c0a-e5a1-4605-af10-e0a9c3900623" />
+
+https://github.com/user-attachments/assets/3a6be739-d029-4463-abf3-7ee9ff1bc17a
+
+
 
 ## Run app locally using Docker
 
