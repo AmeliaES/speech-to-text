@@ -9,13 +9,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Ensure the maximum file size is set (e.g., 10MB)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB limit
 
-# Load the Whisper model, only when needed
-model = None
-def get_model():
-    global model
-    if model is None:
-        model = whisper.load_model("tiny")
-    return model
+# Load the Whisper model
+model = whisper.load_model("base")
 
 # Set up the main route 
 @app.route("/")
@@ -39,7 +34,7 @@ def transcribe():
 
     # Convert or decode file if needed before passing to Whisper
     try:
-        result = get_model().transcribe(filepath)
+        result = model.transcribe(filepath)
         text = result['text']
     except Exception as e:
         return jsonify({'error': str(e)}), 500
